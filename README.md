@@ -1,3 +1,6 @@
+这是我在阅读Spring的源码的基础上加的一些注释之类的。关于Spring源码的阅读心得可以查看我在gitbook上的写的笔记。
+[Spring源码阅读](https://gavinzhang1.gitbooks.io/spring/content/)
+
 ## Spring Framework
 The Spring Framework provides a comprehensive programming and configuration
 model for modern Java-based enterprise applications -- on any kind of deployment
