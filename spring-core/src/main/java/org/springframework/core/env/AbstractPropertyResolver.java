@@ -30,6 +30,8 @@ import org.springframework.util.SystemPropertyUtils;
 /**
  * Abstract base class for resolving properties against any underlying source.
  *
+ * 抽象类，这是一个对任何一个给定的源进行处理属性的抽象类
+ *
  * @author Chris Beams
  * @author Juergen Hoeller
  * @since 3.1
@@ -195,15 +197,28 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 				resolvePlaceholders(value) : resolveRequiredPlaceholders(value));
 	}
 
+	/**
+	 * 创建占位符替换的工具类
+	 * @param ignoreUnresolvablePlaceholders：是否忽略不能解决的占位符
+	 * @return
+	 */
 	private PropertyPlaceholderHelper createPlaceholderHelper(boolean ignoreUnresolvablePlaceholders) {
+		// 一个是前缀，另一个是后缀，最后一个是property，key-value的分隔符
 		return new PropertyPlaceholderHelper(this.placeholderPrefix, this.placeholderSuffix,
 				this.valueSeparator, ignoreUnresolvablePlaceholders);
 	}
 
+	/**
+	 * do开头才是真正进行占位符的替换
+	 * @param text
+	 * @param helper 占位符替换的工具类
+	 * @return
+	 */
 	private String doResolvePlaceholders(String text, PropertyPlaceholderHelper helper) {
 		return helper.replacePlaceholders(text, new PropertyPlaceholderHelper.PlaceholderResolver() {
 			@Override
 			public String resolvePlaceholder(String placeholderName) {
+				// 匿名类执行占位符的替换
 				return getPropertyAsRawString(placeholderName);
 			}
 		});
@@ -215,6 +230,9 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	 * i.e. without resolution of nested placeholders.
 	 * @param key the property name to resolve
 	 * @return the property value or {@code null} if none found
+	 *
+	 * 这里居然是一个抽象方法，而且是在匿名类的内部调用呀，
+	 * 下面我们来看看它的实现类PropertySourcesPropertyResolver的实现。
 	 */
 	protected abstract String getPropertyAsRawString(String key);
 

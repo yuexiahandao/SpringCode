@@ -153,6 +153,10 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 		this.environment = environment;
 	}
 
+	/**
+	 * 正如你所见，Environment获取的过程，这个可能需要回头再看的时候再说了。
+	 * @return
+	 */
 	@Override
 	public Environment getEnvironment() {
 		return this.environment;

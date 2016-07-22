@@ -73,14 +73,18 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 
 	/** Java 8's java.util.Optional.empty() */
+	// 查看下面的static初始化块
 	private static Object javaUtilOptionalEmpty = null;
 
 	static {
 		try {
+			// 加载java.util.Optional类
 			Class<?> clazz = ClassUtils.forName("java.util.Optional", GenericConversionService.class.getClassLoader());
+			// 调用这个类的empty方法
 			javaUtilOptionalEmpty = ClassUtils.getMethod(clazz, "empty").invoke(null);
 		}
 		catch (Exception ex) {
+			// 抛出异常就不是java8
 			// Java 8 not available - conversion to Optional not supported then.
 		}
 	}
@@ -143,8 +147,10 @@ public class GenericConversionService implements ConfigurableConversionService {
 	public boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
 		Assert.notNull(targetType, "targetType to convert to cannot be null");
 		if (sourceType == null) {
+			// null 类型能转换为所有的类型
 			return true;
 		}
+		// 查找转换器，如果转换器存在就是可以转换的
 		GenericConverter converter = getConverter(sourceType, targetType);
 		return (converter != null);
 	}
@@ -171,27 +177,34 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 	@Override
 	@SuppressWarnings("unchecked")
+	// 一层封装而已
 	public <T> T convert(Object source, Class<T> targetType) {
 		Assert.notNull(targetType, "targetType to convert to cannot be null");
 		return (T) convert(source, TypeDescriptor.forObject(source), TypeDescriptor.valueOf(targetType));
 	}
 
 	@Override
+	// 开始进行转换
 	public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 		Assert.notNull(targetType, "targetType to convert to cannot be null");
 		if (sourceType == null) {
 			Assert.isTrue(source == null, "source must be [null] if sourceType == [null]");
+			// 当源类型是null的时候，要转换的源对象也必须是null。如果是基本类型，那么返回null是出错的
 			return handleResult(null, targetType, convertNullSource(null, targetType));
 		}
+		// 如果Source不是sourceType的实例，报错
 		if (source != null && !sourceType.getObjectType().isInstance(source)) {
 			throw new IllegalArgumentException("source to convert from must be an instance of " +
 					sourceType + "; instead it was a " + source.getClass().getName());
 		}
+		// 获取转换器
 		GenericConverter converter = getConverter(sourceType, targetType);
 		if (converter != null) {
+			// 利用ConversionUtils通过反射进行调用转换
 			Object result = ConversionUtils.invokeConverter(converter, source, sourceType, targetType);
 			return handleResult(sourceType, targetType, result);
 		}
+		// 没有转换器的时候，进行处理，返回null
 		return handleConverterNotFound(source, sourceType, targetType);
 	}
 
@@ -231,6 +244,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 	 * @return the converted null object
 	 */
 	protected Object convertNullSource(TypeDescriptor sourceType, TypeDescriptor targetType) {
+		// 如果是java8创建一个空对象返回，否则就是直接返回null就好了。
+		// http://www.tuicool.com/articles/i2mYBv
 		if (javaUtilOptionalEmpty != null && targetType.getObjectType() == javaUtilOptionalEmpty.getClass()) {
 			return javaUtilOptionalEmpty;
 		}
@@ -247,24 +262,30 @@ public class GenericConversionService implements ConfigurableConversionService {
 	 * @return the generic converter that will perform the conversion,
 	 * or {@code null} if no suitable converter was found
 	 * @see #getDefaultConverter(TypeDescriptor, TypeDescriptor)
+	 *
+	 * 找到两种类型对应的转换器
 	 */
 	protected GenericConverter getConverter(TypeDescriptor sourceType, TypeDescriptor targetType) {
+		// 组合生成一个新的对象，获取HashCode，缓存转换器。
 		ConverterCacheKey key = new ConverterCacheKey(sourceType, targetType);
 		GenericConverter converter = this.converterCache.get(key);
 		if (converter != null) {
+			// NO_MATCH是转换器的默认实现，只返回源类型，不做处理。
 			return (converter != NO_MATCH ? converter : null);
 		}
-
+		// 缓存中没有找到，继续
 		converter = this.converters.find(sourceType, targetType);
 		if (converter == null) {
 			converter = getDefaultConverter(sourceType, targetType);
 		}
 
+		// 如果convert找到了，加入缓存
 		if (converter != null) {
 			this.converterCache.put(key, converter);
 			return converter;
 		}
 
+		// 没有找到，放入一个不做处理的转换器，主要是防止再来找一次
 		this.converterCache.put(key, NO_MATCH);
 		return null;
 	}
@@ -320,6 +341,11 @@ public class GenericConversionService implements ConfigurableConversionService {
 		return result;
 	}
 
+	/**
+	 * 如果主要转换的是基本类型，那么返回null是错误的。
+	 * @param sourceType
+	 * @param targetType
+	 */
 	private void assertNotPrimitiveTargetType(TypeDescriptor sourceType, TypeDescriptor targetType) {
 		if (targetType.isPrimitive()) {
 			throw new ConversionFailedException(sourceType, targetType, null,
@@ -434,6 +460,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 	/**
 	 * Key for use with the converter cache.
+	 *
+	 * 转换器在cached中的key
 	 */
 	private static final class ConverterCacheKey implements Comparable<ConverterCacheKey> {
 
@@ -486,6 +514,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 	/**
 	 * Manages all converters registered with the service.
+	 *
+	 * 管理所有注册的转换器
 	 */
 	private static class Converters {
 
@@ -532,11 +562,17 @@ public class GenericConversionService implements ConfigurableConversionService {
 		 */
 		public GenericConverter find(TypeDescriptor sourceType, TypeDescriptor targetType) {
 			// Search the full type hierarchy
+			// 查找类的继承结构
 			List<Class<?>> sourceCandidates = getClassHierarchy(sourceType.getType());
 			List<Class<?>> targetCandidates = getClassHierarchy(targetType.getType());
+			/**
+			 * 这里还是从注册的转换器中查找相应的转换器，只是两种类型对应的注册器没有，那么他们父类的注册器，
+			 * 可能存在，这里就是找它们父类的转换器。那么还是刚才的那个问题，转换器是如何被加入的呢？
+			 */
 			for (Class<?> sourceCandidate : sourceCandidates) {
 				for (Class<?> targetCandidate : targetCandidates) {
 					ConvertiblePair convertiblePair = new ConvertiblePair(sourceCandidate, targetCandidate);
+					// 真正查找转化器的实现
 					GenericConverter converter = getRegisteredConverter(sourceType, targetType, convertiblePair);
 					if (converter != null) {
 						return converter;
@@ -546,6 +582,13 @@ public class GenericConversionService implements ConfigurableConversionService {
 			return null;
 		}
 
+		/**
+		 * 这里还是在缓存中查找注册的转换器
+		 * @param sourceType
+		 * @param targetType
+		 * @param convertiblePair
+		 * @return
+		 */
 		private GenericConverter getRegisteredConverter(TypeDescriptor sourceType,
 				TypeDescriptor targetType, ConvertiblePair convertiblePair) {
 

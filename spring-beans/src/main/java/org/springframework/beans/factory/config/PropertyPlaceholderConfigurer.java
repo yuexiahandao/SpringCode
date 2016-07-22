@@ -70,12 +70,17 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	/**
 	 * Check system properties if not resolvable in the specified properties.
 	 * This is the default.
+	 *
+	 * 如果特例化这个配置没有找到，才会使用系统属性。
+	 * 这个是默认的设置
 	 */
 	public static final int SYSTEM_PROPERTIES_MODE_FALLBACK = 1;
 
 	/**
 	 * Check system properties first, before trying the specified properties.
 	 * This allows system properties to override any other property source.
+	 *
+	 * 先检查系统属性，然后才会去找特例化的设置。
 	 */
 	public static final int SYSTEM_PROPERTIES_MODE_OVERRIDE = 2;
 
@@ -156,12 +161,15 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
 		String propVal = null;
 		if (systemPropertiesMode == SYSTEM_PROPERTIES_MODE_OVERRIDE) {
+			// 如果是系统属性优先，优先使用系统的属性
 			propVal = resolveSystemProperty(placeholder);
 		}
 		if (propVal == null) {
+			// 如果为空，查找这里的特例化配置
 			propVal = resolvePlaceholder(placeholder, props);
 		}
 		if (propVal == null && systemPropertiesMode == SYSTEM_PROPERTIES_MODE_FALLBACK) {
+			// 如果是特例化优先，在执行
 			propVal = resolveSystemProperty(placeholder);
 		}
 		return propVal;
@@ -196,6 +204,7 @@ public class PropertyPlaceholderConfigurer extends PlaceholderConfigurerSupport 
 	protected String resolveSystemProperty(String key) {
 		try {
 			String value = System.getProperty(key);
+			// 是不是设置了，不读取环境变量的值。
 			if (value == null && this.searchSystemEnvironment) {
 				value = System.getenv(key);
 			}

@@ -73,6 +73,8 @@ import org.springframework.util.xml.DomUtils;
  * {@link BeanDefinitionParser BeanDefinitionParsers} or
  * {@link BeanDefinitionDecorator BeanDefinitionDecorators}.
  *
+ * 状态化委托类用于解析XML bean定义。主要是被主解析器使用和任何BeanDefinitionParsers或BeanDefinitionDecorators的扩展类使用
+ *
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Rod Johnson
@@ -256,6 +258,8 @@ public class BeanDefinitionParserDelegate {
 	/**
 	 * Create a new BeanDefinitionParserDelegate associated with the supplied
 	 * {@link XmlReaderContext}.
+	 *
+	 * 初始化，需要传入XMLReaderContext
 	 */
 	public BeanDefinitionParserDelegate(XmlReaderContext readerContext) {
 		Assert.notNull(readerContext, "XmlReaderContext must not be null");
@@ -323,9 +327,13 @@ public class BeanDefinitionParserDelegate {
 	 * defaults are not explicitly set locally.
 	 * @see #populateDefaults(DocumentDefaultsDefinition, DocumentDefaultsDefinition, org.w3c.dom.Element)
 	 * @see #getDefaults()
+	 * 实现默认的lazy-init，autowire，依赖检查设置，init-method，destroy-method和合并设置。
+	 * 支持父类的beans标签（这时需要传入parent参数），如果默认值没有明确地在本地设置，就要使用父类一些配置。
 	 */
 	public void initDefaults(Element root, BeanDefinitionParserDelegate parent) {
+		// 如果本地没有设置，使用父类的设置， DocumentDefaultsDefinition defaults；
 		populateDefaults(this.defaults, (parent != null ? parent.defaults : null), root);
+		// 默认的配置读取完成后，调用钩子（回调）方法。这里需要在readerContext中设置自己的eventListener才有效。
 		this.readerContext.fireDefaultsRegistered(this.defaults);
 	}
 
@@ -337,6 +345,9 @@ public class BeanDefinitionParserDelegate {
 	 * @param defaults the defaults to populate
 	 * @param parentDefaults the parent BeanDefinitionParserDelegate (if any) defaults to fall back to
 	 * @param root the root element of the current bean definition document (or nested beans element)
+	 *
+	 * 设置默认的Bean配置信息，如果有父标签（beans），当前bean没有配置的话，就使用了父标签的配置。
+	 * DocumentDefaultsDefinition中记录这些配置。
 	 */
 	protected void populateDefaults(DocumentDefaultsDefinition defaults, DocumentDefaultsDefinition parentDefaults, Element root) {
 		String lazyInit = root.getAttribute(DEFAULT_LAZY_INIT_ATTRIBUTE);

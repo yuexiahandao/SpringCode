@@ -117,6 +117,10 @@ public class ReaderContext {
 	}
 
 
+	/**
+	 * 调用bean默认配置读取完成后的回调方法。
+	 * @param defaultsDefinition
+	 */
 	public void fireDefaultsRegistered(DefaultsDefinition defaultsDefinition) {
 		this.eventListener.defaultsRegistered(defaultsDefinition);
 	}

@@ -24,6 +24,8 @@ import org.springframework.util.ResourceUtils;
  * Utility class for determining whether a given URL is a resource
  * location that can be loaded via a ResourcePatternResolver.
  *
+ * 工具类，用来检测给定的url是否是资源路径并且可以被ResourcePatternResolver加载。
+ *
  * <p>Callers will usually assume that a location is a relative path
  * if the {@link #isUrl(String)} method returns {@code false}.
  *

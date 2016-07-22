@@ -51,6 +51,9 @@ public interface NamespaceHandler {
 	 * Invoked by the {@link DefaultBeanDefinitionDocumentReader} after
 	 * construction but before any custom elements are parsed.
 	 * @see NamespaceHandlerSupport#registerBeanDefinitionParser(String, BeanDefinitionParser)
+	 *
+	 * 用于对NamespaceHandler坐一些初始化工作，在对象被初始化之后，会调用这个方法。
+	 * 详见DefaultNamespaceHandlerResolver#resolve方法
 	 */
 	void init();
 

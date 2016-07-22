@@ -28,6 +28,8 @@ import java.net.URLConnection;
  * Utility methods for resolving resource locations to files in the
  * file system. Mainly for internal use within the framework.
  *
+ * 工具类，用来将路径对应为文件系统中的文件。为了框架的内部使用。
+ *
  * <p>Consider using Spring's Resource abstraction in the core package
  * for handling all kinds of file resources in a uniform manner.
  * {@link org.springframework.core.io.ResourceLoader}'s {@code getResource()}
@@ -110,6 +112,7 @@ public abstract class ResourceUtils {
 			return true;
 		}
 		try {
+			// 包装
 			new URL(resourceLocation);
 			return true;
 		}

@@ -24,6 +24,8 @@ import org.springframework.core.convert.converter.GenericConverter;
 /**
  * Internal utilities for the conversion package.
  *
+ * conversion包内部使用
+ *
  * @author Keith Donald
  * @author Stephane Nicoll
  * @since 3.0

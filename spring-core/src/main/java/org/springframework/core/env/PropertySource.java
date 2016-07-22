@@ -30,6 +30,10 @@ import org.springframework.util.ObjectUtils;
  * parameters). Explore the {@code PropertySource} type hierarchy to see provided
  * implementations.
  *
+ * 这是一个抽象类。代表属性key-value对的源。下面代码中的getSource方法中的source可能是封装属性的任何类型。
+ * 可能是Properties类型、Map类型、ServletContext、ServletConfig等等。
+ * 可以查看PropertySource类的层次结构，可以看到提供的所有实现。
+ *
  * <p>{@code PropertySource} objects are not typically used in isolation, but rather
  * through a {@link PropertySources} object, which aggregates property sources and in
  * conjunction with a {@link PropertyResolver} implementation that can perform
@@ -59,8 +63,14 @@ public abstract class PropertySource<T> {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 属性源的名称
+	 */
 	protected final String name;
 
+	/**
+	 * 属性源，可以是多种类型
+	 */
 	protected final T source;
 
 
@@ -116,6 +126,8 @@ public abstract class PropertySource<T> {
 	 * or {@code null} if not found.
 	 * @param name the property to find
 	 * @see PropertyResolver#getRequiredProperty(String)
+	 *
+	 * 从属性源中取得属性值
 	 */
 	public abstract Object getProperty(String name);
 

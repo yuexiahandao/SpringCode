@@ -30,9 +30,13 @@ import org.springframework.util.StringUtils;
  * Allows manipulation of contained property sources and provides a constructor
  * for copying an existing {@code PropertySources} instance.
  *
+ * 默认的PropertySources实现类，运行维护包含的属性源并且提供一个构造器来拷贝一份PropertySource
+ *
  * <p>Where <em>precedence</em> is mentioned in methods such as {@link #addFirst}
  * and {@link #addLast}, this is with regard to the order in which property sources
  * will be searched when resolving a given property with a {@link PropertyResolver}.
+ *
+ * 当优先权在方法中被提及，比如addFirst，addLast这类方法。这个关系到当解决一个给定的属性的PropertyResolver时，哪个属性源会被搜索。
  *
  * @author Chris Beams
  * @author Juergen Hoeller
@@ -41,8 +45,14 @@ import org.springframework.util.StringUtils;
  */
 public class MutablePropertySources implements PropertySources {
 
+	/**
+	 * 日志打印器
+	 */
 	private final Log logger;
 
+	/**
+	 * PropertySource的集合，线程安全性的ArrayList
+	 */
 	private final List<PropertySource<?>> propertySourceList = new CopyOnWriteArrayList<PropertySource<?>>();
 
 
@@ -116,12 +126,14 @@ public class MutablePropertySources implements PropertySources {
 	/**
 	 * Add the given property source object with precedence immediately higher
 	 * than the named relative property source.
+	 * 在某个属性源前加入新的属性源
 	 */
 	public void addBefore(String relativePropertySourceName, PropertySource<?> propertySource) {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Adding [%s] PropertySource with search precedence immediately higher than [%s]",
 					propertySource.getName(), relativePropertySourceName));
 		}
+		// 保证当前的属性源不是自己，以至于形成循环的问题
 		assertLegalRelativeAddition(relativePropertySourceName, propertySource);
 		removeIfPresent(propertySource);
 		int index = assertPresentAndGetIndex(relativePropertySourceName);
@@ -196,6 +208,7 @@ public class MutablePropertySources implements PropertySources {
 
 	/**
 	 * Ensure that the given property source is not being added relative to itself.
+	 * 保证当前的属性源不是自己，以至于形成循环的问题
 	 */
 	protected void assertLegalRelativeAddition(String relativePropertySourceName, PropertySource<?> propertySource) {
 		String newPropertySourceName = propertySource.getName();

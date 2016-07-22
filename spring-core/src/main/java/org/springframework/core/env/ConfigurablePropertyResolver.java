@@ -24,6 +24,9 @@ import org.springframework.core.convert.support.ConfigurableConversionService;
  * {@link org.springframework.core.convert.ConversionService ConversionService} used when
  * converting property values from one type to another.
  *
+ * 配置接口，不是全部PropertyResolver类型实现，大多数就是通过这个类实现。
+ * 当将属性值从一个类型转换到另一个类型，提供访问自定义的ConversionService的实现类的机制。
+ *
  * @author Chris Beams
  * @since 3.1
  */
@@ -40,6 +43,8 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * </pre>
 	 * @see PropertyResolver#getProperty(String, Class)
 	 * @see org.springframework.core.convert.converter.ConverterRegistry#addConverter
+	 *
+	 * 取得转换的服务类
 	 */
 	ConfigurableConversionService getConversionService();
 
@@ -53,6 +58,8 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * @see PropertyResolver#getProperty(String, Class)
 	 * @see #getConversionService()
 	 * @see org.springframework.core.convert.converter.ConverterRegistry#addConverter
+	 *
+	 * 设置转换的服务类
 	 */
 	void setConversionService(ConfigurableConversionService conversionService);
 

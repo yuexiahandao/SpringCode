@@ -41,16 +41,25 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * Spring提供的ResolvableType API，提供了更加简单易用的泛型操作支持，
+ * http://sishuok.com/forum/posts/list/7837.html
+ *
  * Encapsulates a Java {@link java.lang.reflect.Type}, providing access to
  * {@link #getSuperType() supertypes}, {@link #getInterfaces() interfaces}, and
  * {@link #getGeneric(int...) generic parameters} along with the ability to ultimately
  * {@link #resolve() resolve} to a {@link java.lang.Class}.
+ *
+ * 封装java的java.lang.reflect.Type，提供访问父型，接口和普通属性的方法。同时最终决定一个class类。
  *
  * <p>{@code ResolvableTypes} may be obtained from {@link #forField(Field) fields},
  * {@link #forMethodParameter(Method, int) method parameters},
  * {@link #forMethodReturnType(Method) method returns} or
  * {@link #forClass(Class) classes}. Most methods on this class will themselves return
  * {@link ResolvableType}s, allowing easy navigation. For example:
+ *
+ * ResolvableTypes可能从 fields, method parameters, method returns or classes.中获得他们的类型进行封装。这个类的大多数方法自己就返回
+ * ResolvableTypes类型，允许容易导航，例如HashMap<Integer, List<String>>这样的嵌套。
+ *
  * <pre class="code">
  * private HashMap&lt;Integer, List&lt;String&gt;&gt; myMap;
  *
@@ -95,11 +104,14 @@ public class ResolvableType implements Serializable {
 
 	/**
 	 * The underlying Java type being managed (only ever {@code null} for {@link #NONE}).
+	 *
+	 * 被管理的隐藏的Java类型
 	 */
 	private final Type type;
 
 	/**
 	 * Optional provider for the type.
+	 * 这个类型的可选提供者
 	 */
 	private final TypeProvider typeProvider;
 
@@ -175,6 +187,7 @@ public class ResolvableType implements Serializable {
 	 * @since 4.2
 	 */
 	private ResolvableType(Class<?> sourceClass) {
+		// 如果给的class是空的，那么泛型指的就是Object类，否则就是指定的类型
 		this.resolved = (sourceClass != null ? sourceClass : Object.class);
 		this.type = this.resolved;
 		this.typeProvider = null;

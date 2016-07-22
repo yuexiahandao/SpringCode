@@ -36,6 +36,8 @@ import org.springframework.util.ObjectUtils;
 /**
  * Context about a type to convert from or to.
  *
+ * 转换的源类型或者目标类型的上下文
+ *
  * @author Keith Donald
  * @author Andy Clement
  * @author Juergen Hoeller
@@ -508,11 +510,14 @@ public class TypeDescriptor implements Serializable {
 	 * descriptors from source objects, as it handles the {@code null} object case.
 	 * @param type the class (may be {@code null} to indicate {@code Object.class})
 	 * @return the corresponding type descriptor
+	 *
+	 * 使用valueOf函数对目标类型进行封装
 	 */
 	public static TypeDescriptor valueOf(Class<?> type) {
 		if (type == null) {
 			type = Object.class;
 		}
+		// TypeDescriptor加入了缓存中，如果缓存中有就返回缓冲中的数据
 		TypeDescriptor desc = commonTypesCache.get(type);
 		return (desc != null ? desc : new TypeDescriptor(ResolvableType.forClass(type), null, null));
 	}

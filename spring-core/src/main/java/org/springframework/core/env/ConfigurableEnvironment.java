@@ -25,6 +25,10 @@ import java.util.Map;
  * conversion service and more through the {@link ConfigurablePropertyResolver}
  * superinterface.
  *
+ * 配置接口，大多数如果不是全部环境类型来实现，就是这个类来实现。
+ * 为设置活跃，默认配置文件和操作基本属性源机制。允许客户设置和验证所需的属性，
+ * 通过ConfigurablePropertyResolver超接口定制转换服务等等。
+ *
  * <h2>Manipulating property sources</h2>
  * <p>Property sources may be removed, reordered, or replaced; and additional
  * property sources may be added using the {@link MutablePropertySources}
@@ -32,6 +36,10 @@ import java.util.Map;
  * are against the {@link StandardEnvironment} implementation of
  * {@code ConfigurableEnvironment}, but are generally applicable to any implementation,
  * though particular default property sources may differ.
+ *
+ * 维护属性源
+ * 属性源可能被移除、记录或者替换。另外额外的属性源可以通过MutablePropertySources加入，通过getPropertySources返回实例。
+ * 下面的例子是根据ConfigurableEnvironment接口的StandardEnvironment实现类，虽然尤其是默认属性的来源可能不同，但一般适用于任何实现。
  *
  * <h4>Example: adding a new property source with highest search priority</h4>
  * <pre class="code">

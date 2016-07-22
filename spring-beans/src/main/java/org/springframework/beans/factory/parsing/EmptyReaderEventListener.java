@@ -20,6 +20,8 @@ package org.springframework.beans.factory.parsing;
  * Empty implementation of the {@link ReaderEventListener} interface,
  * providing no-op implementations of all callback methods.
  *
+ * 带有所有callback方法的类，在XmlBeanDefinitionReader中，指定的默认eventListener就是这个类
+ *
  * @author Juergen Hoeller
  * @since 2.0
  */

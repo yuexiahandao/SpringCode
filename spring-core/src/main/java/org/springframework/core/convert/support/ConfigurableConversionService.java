@@ -28,6 +28,10 @@ import org.springframework.core.convert.converter.ConverterRegistry;
  * {@link org.springframework.core.env.ConfigurableEnvironment ConfigurableEnvironment}
  * instance in application context bootstrapping code.
  *
+ * 配置接口，大多数如果不是全部ConversionService类型来实现就用这个类来实现。
+ * 合并由ConversionService暴露的只读操作和ConverterRegistry的突变操作，以允许通过转换器的方便临时添加和去除。
+ * 后者针对应用程序上下文引导代码ConfigurableEnvironment实例时特别有用。
+ *
  * @author Chris Beams
  * @since 3.1
  * @see org.springframework.core.env.ConfigurablePropertyResolver#getConversionService()

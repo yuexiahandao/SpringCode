@@ -19,6 +19,8 @@ package org.springframework.core.env;
 /**
  * Interface for resolving properties against any underlying source.
  *
+ * 对任何底层源注入属性的接口
+ *
  * @author Chris Beams
  * @since 3.1
  * @see Environment
@@ -29,6 +31,8 @@ public interface PropertyResolver {
 	/**
 	 * Return whether the given property key is available for resolution, i.e.,
 	 * the value for the given key is not {@code null}.
+	 *
+	 * 查看是否包含某种属性
 	 */
 	boolean containsProperty(String key);
 
@@ -58,6 +62,8 @@ public interface PropertyResolver {
 	 * @param key the property name to resolve
 	 * @param targetType the expected type of the property value
 	 * @see #getRequiredProperty(String, Class)
+	 *
+	 * 加上了类型转换
 	 */
 	<T> T getProperty(String key, Class<T> targetType);
 

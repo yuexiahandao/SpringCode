@@ -122,6 +122,8 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #customizePropertySources(MutablePropertySources)
 	 */
 	public AbstractEnvironment() {
+		// 这里我们来看看是如何找到propertySources的。资源是如何被加载进来的。
+		// 就查看StandardEnvironment这个类就可以了。
 		customizePropertySources(this.propertySources);
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug(format(

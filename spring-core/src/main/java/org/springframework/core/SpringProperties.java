@@ -27,15 +27,24 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Static holder for local Spring properties, i.e. defined at the Spring library level.
  *
+ * 本地spring.properties文件内容的映射。定义在spring库级别。
+ *
  * <p>Reads a {@code spring.properties} file from the root of the Spring library classpath,
  * and also allows for programmatically setting properties through {@link #setProperty}.
  * When checking a property, local entries are being checked first, then falling back
  * to JVM-level system properties through a {@link System#getProperty} check.
  *
+ * 从spring库的classpath加载spring.properties文件，也可以通过编程的方式设置对应属性，通过setProperty方法。
+ * 首先加载spring.properties文件，然后读取JVM级别的系统属性（通过System.getProperties）
+ *
  * <p>This is an alternative way to set Spring-related system properties such as
  * "spring.getenv.ignore" and "spring.beaninfo.ignore", in particular for scenarios
  * where JVM system properties are locked on the target platform (e.g. WebSphere).
  * See {@link #setFlag} for a convenient way to locally set such flags to "true".
+ *
+ * 这是设置Spring相关系统属性的可变方式，比如spring.getenv.ignore和spring.beaninfo.ignore，
+ * 特别地是JVM系统属性在目标环境被锁住的情形。
+ * 你可以查看setFlag方法，可以很方便地设置该属性为true。
  *
  * @author Juergen Hoeller
  * @since 3.2.7
@@ -53,9 +62,13 @@ public abstract class SpringProperties {
 	private static final Properties localProperties = new Properties();
 
 
+	// 静态方法，加载类的时候，去读取Spring.properties文件。
 	static {
 		try {
 			ClassLoader cl = SpringProperties.class.getClassLoader();
+			// spring.properties 文件放在Spring的根ClassPathResource下
+			// 关于getResource的路径，这里有相应的解释http://hxdawxyhxdawxy.iteye.com/blog/1717335
+			// http://blog.csdn.net/ak913/article/details/7399056
 			URL url = (cl != null ? cl.getResource(PROPERTIES_RESOURCE_LOCATION) :
 					ClassLoader.getSystemResource(PROPERTIES_RESOURCE_LOCATION));
 			if (url != null) {
@@ -117,6 +130,8 @@ public abstract class SpringProperties {
 	 * Programmatically set a local flag to "true", overriding an
 	 * entry in the {@code spring.properties} file (if any).
 	 * @param key the property key
+	 *
+	 * 设置对应的property为true。
 	 */
 	public static void setFlag(String key) {
 		localProperties.put(key, Boolean.TRUE.toString());

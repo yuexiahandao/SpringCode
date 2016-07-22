@@ -24,6 +24,8 @@ import org.springframework.util.Assert;
 /**
  * Generic converter interface for converting between two or more types.
  *
+ * 这个是用来在不同类型之间的转换器接口设计。
+ *
  * <p>This is the most flexible of the Converter SPI interfaces, but also the most complex.
  * It is flexible in that a GenericConverter may support converting between multiple source/target
  * type pairs (see {@link #getConvertibleTypes()}. In addition, GenericConverter implementations
@@ -66,6 +68,8 @@ public interface GenericConverter {
 
 	/**
 	 * Holder for a source-to-target class pair.
+	 *
+	 * 持有源类到目标类的类对
 	 */
 	final class ConvertiblePair {
 

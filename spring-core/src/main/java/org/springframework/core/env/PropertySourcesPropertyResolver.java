@@ -66,6 +66,9 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 	}
 
 	@Override
+	/**
+	 * 通过key获得value，指定是String类型
+	 */
 	protected String getPropertyAsRawString(String key) {
 		return getProperty(key, String.class, false);
 	}
@@ -90,11 +93,13 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 						logger.debug(String.format("Found key '%s' in [%s] with type [%s] and value '%s'",
 								key, propertySource.getName(), valueType.getSimpleName(), value));
 					}
+					// 不对的话，进行类型转换，失败爆出异常, 其实就是查找对应的转换器是否存在。
 					if (!this.conversionService.canConvert(valueType, targetValueType)) {
 						throw new IllegalArgumentException(String.format(
 								"Cannot convert value [%s] from source type [%s] to target type [%s]",
 								value, valueType.getSimpleName(), targetValueType.getSimpleName()));
 					}
+					// 利用找到的转换器进行转换
 					return this.conversionService.convert(value, targetValueType);
 				}
 			}
@@ -102,6 +107,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		if (debugEnabled) {
 			logger.debug(String.format("Could not find key '%s' in any property source. Returning [null]", key));
 		}
+		// 如果没有属性源，那么直接返回null。
 		return null;
 	}
 
