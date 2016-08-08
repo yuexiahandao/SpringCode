@@ -847,7 +847,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else if (!beanDefinition.equals(oldBeanDefinition)) {
-				// 两种Bean不一样
+				// 两种Bean不一样，不报错只打印相关的信息
 				if (this.logger.isInfoEnabled()) {
 					this.logger.info("Overriding bean definition for bean '" + beanName +
 							"' with a different definition: replacing [" + oldBeanDefinition +
@@ -867,12 +867,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 		else {
 			// 找不到相应的注册bean，新注册
+			// 如果在AlreadyCreate中创建了实例，就说明解析的过程已经结束了，这里的解析过程是不实例化Bean的。
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				// 同步加锁
 				synchronized (this.beanDefinitionMap) {
 					this.beanDefinitionMap.put(beanName, beanDefinition);
-					// 这里貌似是可以直接加的，这里是为了啥，缓冲一下？？
+					// 这里貌似是可以直接加的，这里是为了啥，缓冲一下？？ 应该是为了线程安全
 					List<String> updatedDefinitions = new ArrayList<String>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
 					updatedDefinitions.add(beanName);
@@ -893,7 +894,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 			this.frozenBeanDefinitionNames = null;
 		}
-
+		// 如果旧的Bean存在，或者对应的单利存在，卸载旧的
 		if (oldBeanDefinition != null || containsSingleton(beanName)) {
 			resetBeanDefinition(beanName);
 		}
@@ -935,6 +936,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 */
 	protected void resetBeanDefinition(String beanName) {
 		// Remove the merged bean definition for the given bean, if already created.
+		// 从mergedBeanDefinitions删除对应的beanName
+		/*通过beanName，从mergedBeanDefinitions(针对mergeBeanDefinition的缓存)中取出合并的BeanDefinition，mergedBeanDefinition主要指两个BeanDefinition的合并，比如父子两个的合并*/
 		clearMergedBeanDefinition(beanName);
 
 		// Remove corresponding bean from singleton cache, if any. Shouldn't usually
@@ -946,6 +949,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		for (String bdName : this.beanDefinitionNames) {
 			if (!beanName.equals(bdName)) {
 				BeanDefinition bd = this.beanDefinitionMap.get(bdName);
+				// 将该bean下的所有子bean也一并去掉。
 				if (beanName.equals(bd.getParentName())) {
 					resetBeanDefinition(bdName);
 				}

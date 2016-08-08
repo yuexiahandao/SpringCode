@@ -563,6 +563,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		removeSingleton(beanName);
 
 		// Destroy the corresponding DisposableBean instance.
+		// 销毁实例
 		DisposableBean disposableBean;
 		synchronized (this.disposableBeans) {
 			disposableBean = (DisposableBean) this.disposableBeans.remove(beanName);

@@ -20,6 +20,8 @@ package org.springframework.beans;
  * Holder containing one or more {@link PropertyValue} objects,
  * typically comprising one update for a specific target bean.
  *
+ * 持有者包含一个或者多个PropertyValue对象，典型地构成一个特定目标bean的更新拷贝
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @since 13 May 2001

@@ -65,7 +65,7 @@ public class BeanDefinitionReaderUtils {
 				bd.setBeanClass(ClassUtils.forName(className, classLoader));
 			}
 			else {
-				// 没有classLoader，只设置类名，不设置class。
+				// 没有classLoader，暂时只设置类名，不设置class。
 				bd.setBeanClassName(className);
 			}
 		}

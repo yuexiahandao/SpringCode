@@ -26,7 +26,11 @@ import org.springframework.util.Assert;
  * Support class for {@link AttributeAccessor AttributeAccessors}, providing
  * a base implementation of all methods. To be extended by subclasses.
  *
+ * AttributeAccessors的支持类，提供所有方法的基本实现。给予子类来继承。
+ *
  * <p>{@link Serializable} if subclasses and all attribute values are {@link Serializable}.
+ *
+ * 如果子类和所有的属性都能实例化的话，就支持序列化。
  *
  * @author Rob Harrop
  * @author Juergen Hoeller

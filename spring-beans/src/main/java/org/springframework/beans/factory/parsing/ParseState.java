@@ -29,7 +29,7 @@ import java.util.Stack;
  * position in the parse phase. This representation is intended for use in
  * error messages.
  *
- * 当出现错误的时候，栈中的信息将会被输出作为错误信息的一部风
+ * 当出现错误的时候，栈中的信息将会被输出作为错误信息的一部分
  *
  * @author Rob Harrop
  * @since 2.0

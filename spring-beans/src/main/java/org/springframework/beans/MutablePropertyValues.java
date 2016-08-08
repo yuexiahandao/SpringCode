@@ -30,6 +30,8 @@ import org.springframework.util.StringUtils;
  * Allows simple manipulation of properties, and provides constructors
  * to support deep copy and construction from a Map.
  *
+ * 默认的PropertyValues接口实现类，允许简单操作属性和提供构造方法以实现深拷贝和从map中构造。
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Rob Harrop

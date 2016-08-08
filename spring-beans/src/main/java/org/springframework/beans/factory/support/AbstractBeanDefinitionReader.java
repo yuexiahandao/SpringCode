@@ -182,6 +182,7 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 		Assert.notNull(resources, "Resource array must not be null");
 		int counter = 0;
 		for (Resource resource : resources) {
+			// 又是封装
 			counter += loadBeanDefinitions(resource);
 		}
 		return counter;
@@ -206,6 +207,8 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 	 * @see #getResourceLoader()
 	 * @see #loadBeanDefinitions(org.springframework.core.io.Resource)
 	 * @see #loadBeanDefinitions(org.springframework.core.io.Resource[])
+	 *
+	 * 从给定的资源路径，加载bean定义。这也是loadBeanDefinitions(resource)的封装，主要是先查找Resource。
 	 */
 	public int loadBeanDefinitions(String location, Set<Resource> actualResources) throws BeanDefinitionStoreException {
 		ResourceLoader resourceLoader = getResourceLoader();
@@ -216,9 +219,12 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
+			// 这里的资源加载器最好是ResourcePatternResolver，这样直接封装对应的Resource
 			try {
+				// 加载目录或者文件找到资源
 				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
 				int loadCount = loadBeanDefinitions(resources);
+				// 暂时还不知道actualResources是干啥用的，继续看
 				if (actualResources != null) {
 					for (Resource resource : resources) {
 						actualResources.add(resource);

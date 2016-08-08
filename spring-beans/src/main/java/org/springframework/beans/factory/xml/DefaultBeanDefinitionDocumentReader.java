@@ -312,8 +312,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						ele, ex);
 			}
 		}
-		// 解析后进行监听器激活处理
+
+		// 解析后进行监听器激活处理，这里的Resource是接口,后面的数组定义应该是Resource[的实例（里面都是空的引用而已），
+		// 而不是Resource实例，关于Java数组的实现可以参考工具书。
 		Resource[] actResArray = actualResources.toArray(new Resource[actualResources.size()]);
+		// 处理完import后，调用eventListener的回调。
 		getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 	}
 
@@ -344,7 +347,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				getReaderContext().error("Failed to register alias '" + alias +
 						"' for bean with name '" + name + "'", ele, ex);
 			}
-			// 通知alias已经注册完毕。
+			// 通知alias已经注册完毕。 调用回调方法。
 			getReaderContext().fireAliasRegistered(name, alias, extractSource(ele));
 		}
 	}

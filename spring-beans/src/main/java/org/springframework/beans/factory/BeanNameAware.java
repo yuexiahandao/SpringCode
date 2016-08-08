@@ -23,6 +23,8 @@ package org.springframework.beans.factory;
  * brittle dependence on external configuration, as well as a possibly
  * unnecessary dependence on a Spring API.
  *
+ * 在BeanName中包含beanName。这是SPI接口。
+ *
  * <p>For a list of all bean lifecycle methods, see the
  * {@link BeanFactory BeanFactory javadocs}.
  *

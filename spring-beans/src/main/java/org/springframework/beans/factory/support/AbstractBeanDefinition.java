@@ -40,9 +40,14 @@ import org.springframework.util.StringUtils;
  * factoring out common properties of {@link GenericBeanDefinition},
  * {@link RootBeanDefinition}, and {@link ChildBeanDefinition}.
  *
+ * 具体的BeanDefinition的基类，保存着GenericBeanDefinition，
+ * RootBeanDefinition和ChildBeanDefinition的通用属性
+ *
  * <p>The autowire constants match the ones defined in the
  * {@link org.springframework.beans.factory.config.AutowireCapableBeanFactory}
  * interface.
+ *
+ * 关于自动注入的功能，匹配自动注入的类型，这个在类AutowireCapableBeanFactory接口中有定义
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -792,6 +797,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Specify property values for this bean, if any.
+	 * 如果有的话，特例化这个bean的属性值
 	 */
 	public void setPropertyValues(MutablePropertyValues propertyValues) {
 		this.propertyValues = (propertyValues != null ? propertyValues : new MutablePropertyValues());

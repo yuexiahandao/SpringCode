@@ -20,6 +20,15 @@ package org.springframework.beans;
  * Interface to be implemented by bean metadata elements
  * that carry a configuration source object.
  *
+ * 被用来实现bean元元素的接口，这些元元素保存着源对象的配置信息。
+ *
+ * BeanMetadataElement接口提供了一个getResource()方法,用来传输一个可配置的源对象。
+ *
+ * BeanMetadataAttributeAccessor接口既实现了BeanMetadataElement接口提供的
+ * getResource()方法也提供了AttributeAccessorSupport 针对属性的增删改查，如上AttributeAccessor的方法。
+ *
+ * http://www.cnblogs.com/davidwang456/p/4192318.html
+ *
  * @author Juergen Hoeller
  * @since 2.0
  */
